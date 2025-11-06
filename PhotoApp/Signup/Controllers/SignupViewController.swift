@@ -8,12 +8,6 @@
 import UIKit
 
 class SignupViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
     
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
@@ -22,8 +16,42 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var repeatPasswordTextField: UITextField!
     @IBOutlet weak var signupButton: UIButton!
     
+    var signupPresenter: SignupPresenterProtocol?
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if signupPresenter == nil {
+            let signupFormModelValidator = SignupFormModelValidator()
+            let signupWebService = SignupWebService(urlString: SignupConstants.signupURLString)
+            
+            signupPresenter = SignupPresenter(formModelValidator: signupFormModelValidator, webService: signupWebService, delegate: self)
+        }
+    }
+    
     
     @IBAction func signupButtonTapped(_ sender: Any) {
+        
+        let signupFormModel = SignupFormModel(firstName: firstNameTextField.text ?? "",
+                                              lastName: lastNameTextField.text ?? "",
+                                              email: emailTextField.text ?? "",
+                                              password: passwordTextField.text ?? "",
+                                              repeatPassword: repeatPasswordTextField.text ?? "")
+        
+        signupPresenter?.processUserSignup(formModel: signupFormModel)
     }
+    
+}
+
+extension SignupViewController: SignupViewDelegateProtocol {
+    
+    func successfulSignup() {
+        // TODO:
+    }
+    
+    func errorHandler(error: SignupError) {
+        // TODO:
+    }
+    
     
 }
