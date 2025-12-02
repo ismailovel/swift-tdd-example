@@ -166,6 +166,9 @@
 			dependencies = (
 				8549D51C2EAF341E006113F8 /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				8549D51D2EAF341E006113F8 /* PhotoAppUITests */,
+			);
 			name = PhotoAppUITests;
 			packageProductDependencies = (
 			);
