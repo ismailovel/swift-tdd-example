@@ -28,12 +28,12 @@ final class SignupFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         
-        let firstName = app/*@START_MENU_TOKEN@*/.textFields["First name"]/*[[".otherElements.textFields[\"First name\"]",".textFields[\"First name\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
-        let lastName = app/*@START_MENU_TOKEN@*/.textFields["Last name"]/*[[".otherElements.textFields[\"Last name\"]",".textFields[\"Last name\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
-        let email = app/*@START_MENU_TOKEN@*/.textFields["Email"]/*[[".otherElements.textFields[\"Email\"]",".textFields[\"Email\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
-        let password = app.secureTextFields["Password"].firstMatch
-        let repeatPassword = app.secureTextFields["Repeat Password"].firstMatch
-        let signupButton = app/*@START_MENU_TOKEN@*/.staticTexts["Signup"]/*[[".buttons[\"Signup\"].staticTexts",".buttons.staticTexts[\"Signup\"]",".staticTexts[\"Signup\"]"],[[[-1,2],[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
+        let firstName = app.textFields["firstNameTextField"].firstMatch
+        let lastName = app.textFields["lastNameTextField"].firstMatch
+        let email = app.textFields["emailTextField"].firstMatch
+        let password = app.secureTextFields["passwordTextField"].firstMatch
+        let repeatPassword = app.secureTextFields["repeatPasswordTextField"].firstMatch
+        let signupButton = app.buttons["signupButton"].firstMatch
         
         XCTAssertTrue(firstName.isEnabled, "First name UITextField is not enabled for user interactions")
         XCTAssertTrue(lastName.isEnabled, "Last name UITextField is not enabled for user interactions")
@@ -44,6 +44,40 @@ final class SignupFlowUITests: XCTestCase {
         
         
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+    }
+    
+    func testViewController_WhenInvalidFormSubmitted_PresentsErrorAlertDialog() throws {
+        // Arrange
+        let app = XCUIApplication()
+        app.launch()
+        
+        let firstName = app.textFields["firstNameTextField"].firstMatch
+        firstName.tap()
+        firstName.typeText("S")
+        
+        let lastName = app.textFields["lastNameTextField"].firstMatch
+        lastName.tap()
+        lastName.typeText("K")
+        
+        let email = app.textFields["emailTextField"].firstMatch
+        email.tap()
+        email.typeText("@")
+        
+        let password = app.secureTextFields["passwordTextField"].firstMatch
+        password.tap()
+        password.typeText("123456")
+        
+        let repeatPassword = app.secureTextFields["repeatPasswordTextField"].firstMatch
+        repeatPassword.tap()
+        repeatPassword.typeText("123")
+        
+        let signupButton = app.buttons["signupButton"].firstMatch
+        
+        // Act
+        signupButton.tap()
+        
+        // Assert
+        XCTAssertTrue(app.alerts["errorAlertDialog"].waitForExistence(timeout: 1), "An Error Alert dialog was not presented when invalid signup form was submitted")
     }
 
     @MainActor
