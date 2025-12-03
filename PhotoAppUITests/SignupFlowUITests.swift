@@ -24,6 +24,12 @@ final class SignupFlowUITests: XCTestCase {
         try super.setUpWithError()
         
         app = XCUIApplication()
+        app.launchArguments = ["-skipSurvey", "-debugServer"]
+        app.launchEnvironment = [
+            "signupURL": "https://someURL",
+            "inAppPurchasesEnabled": "true",
+            "inAppAdsEnabled": "true"
+        ]
         app.launch()
         
         firstName = app.textFields["firstNameTextField"].firstMatch
